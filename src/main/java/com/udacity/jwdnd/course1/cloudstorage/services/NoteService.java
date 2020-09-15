@@ -21,10 +21,9 @@ public class NoteService {
 
     public Integer insertNote(Note newnote) { return noteMapper.addnote(newnote); }
 
-    public Integer updateNote(Integer nId, String nTitle, String nDescription) { return noteMapper.updatenote(nId, nTitle, nDescription); }
+    public Integer updateNote(Note upnote) { return noteMapper.updatenote(upnote); }
 
     public Integer deleteNote(Integer noteId) { return noteMapper.deletenote(noteId); }
 
-    public Integer nId(String nTitle) { return noteMapper.nid(nTitle); }
 
 }

@@ -15,12 +15,10 @@ public interface NoteMapper {
     @Options(useGeneratedKeys = true, keyProperty = "noteid")
     int addnote(Note note);
 
-    @Update("UPDATE NOTES SET notetitile = #{notetitle}, notedescription = #{notedescription} WHERE noteid = #{noteid}")
-    int updatenote(Integer nid, String title, String description);
+    @Update("UPDATE NOTES SET notetitle = #{notetitle}, notedescription = #{notedescription} WHERE noteid = #{noteid}")
+    int updatenote(Note note);
 
     @Delete("DELETE FROM NOTES WHERE noteid = #{noteid}")
     int deletenote(Integer noteid);
 
-    @Select("SELECT noteid from NOTES WHERE notetitle = #{notetitle}")
-    int nid(String notetitle);
 }

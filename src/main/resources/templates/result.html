@@ -11,17 +11,17 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
             <div class="alert alert-success fill-parent" th:if="${ChangeSuccess}">
-                <h1 class="display-5">Success</h1>
-                <span>Your changes were successfully saved. Click <a href="/home">here</a> to continue.</span>
+                <h1 id="success" class="display-5">Success</h1>
+                <span>Your changes were successfully saved. Click <a id="success2home" href="/home">here</a> to continue.</span>
             </div>
             <div class="alert alert-danger fill-parent" th:if="${ChangeError}">
-                <h1 class="display-5">Error</h1>
-                <span>Your changes were not saved. Click <a th:href="@{/home}">here</a> to continue.</span>
+                <h1 id="error" class="display-5">Error</h1>
+                <span>Your changes were not saved. Click <a id="error2home" th:href="@/home}">here</a> to continue.</span>
             </div>
             <div class="alert alert-danger fill-parent" th:if="${ErrorBanner}">
-                <h1 class="display-5">Error</h1>
+                <h1 id="banner" class="display-5">Error</h1>
                 <span th:text="${ErrorBanner}"></span>
-                <span>Click <a th:href="@{/home}">here</a> to continue.</span>
+                <span>Click <a id="banner2home" th:href="@{/home}">here</a> to continue.</span>
             </div>
         </div>
     </body>

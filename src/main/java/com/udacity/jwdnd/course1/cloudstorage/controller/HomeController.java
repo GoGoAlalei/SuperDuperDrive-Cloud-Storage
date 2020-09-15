@@ -3,10 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
-import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
-import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
-import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
-import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import com.udacity.jwdnd.course1.cloudstorage.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -116,11 +113,11 @@ public class HomeController {
     }
 
     @PostMapping("/note/edit")
-    public String addoreditNote(@ModelAttribute Note note, Authentication auth, Model model) {
-        System.out.println("uid: " + note.getNoteid());
+    public String AddEditNote(@ModelAttribute Note note, Authentication auth, Model model) {
+
         if(note.getNoteid() == null) {
-            int addrow = noteService.insertNote(new Note(null, note.getNotetitle(), note.getNotedescription(), userService.getUserId(auth.getName())));
-            System.out.println("add: " + noteService.nId(note.getNotetitle()));
+            note.setUserid(userService.getUserId(auth.getName()));
+            int addrow = noteService.insertNote(note);
             if (addrow != 1) {
                 model.addAttribute("ChangeError", true);
                 return "result";
@@ -131,8 +128,7 @@ public class HomeController {
             }
         }
         else {
-            int updaterow = noteService.updateNote(note.getNoteid(), note.getNotetitle(), note.getNotedescription());
-            System.out.println("edit: " + noteService.nId(note.getNotetitle()));
+            int updaterow = noteService.updateNote(note);
             if (updaterow != 1) {
                 model.addAttribute("ChangeError", true);
                 return "result";
@@ -157,5 +153,44 @@ public class HomeController {
         }
     }
 
+    @PostMapping("/credential/edit")
+    public String AddEditCredential(@ModelAttribute Credential credential, Authentication auth, Model model) {
+        if(credential.getCredentialid() == null) {
+            credential.setUserid(userService.getUserId(auth.getName()));
+            int addrow = credentialService.insertCredential(credential);
+            if (addrow != 1) {
+                model.addAttribute("ChangeError", true);
+                return "result";
+            }
+            else {
+                model.addAttribute("ChangeSuccess", true);
+                return "result";
+            }
+        }
+        else {
+            int updaterow = credentialService.updateCredential(credential);
+            if (updaterow != 1) {
+                model.addAttribute("ChangeError", true);
+                return "result";
+            }
+            else {
+                model.addAttribute("ChangeSuccess", true);
+                return "result";
+            }
+        }
+    }
+
+    @GetMapping("/credential/delete/{credentialId}")
+    public String deleteCredential(@PathVariable Integer credentialId, Model model) {
+        int delrow = credentialService.deleteCredential(credentialId);
+        if(delrow != 1) {
+            model.addAttribute("ChangeError", true);
+            return "result";
+        }
+        else{
+            model.addAttribute("ChangeSuccess", true);
+            return "result";
+        }
+    }
 
 }

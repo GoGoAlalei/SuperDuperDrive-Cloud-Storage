@@ -64,8 +64,26 @@ public class HomeController {
         FastByteArrayOutputStream output = new FastByteArrayOutputStream();
         fis.transferTo(output);
 
-        if(output.size() == 0) {
-            errorBanner = "Invalid empty file!";
+        //if(fileupload.isEmpty()) {
+        //    errorBanner = "Please select a file!";
+        //    model.addAttribute("ErrorBanner", errorBanner);
+        //   return "result";
+        //}
+
+        if (fileupload.getSize() > 5242880) {
+            errorBanner = "Maximum file size is 5M.";
+            model.addAttribute("ErrorBanner", errorBanner);
+            return "result";
+        }
+
+        if(fileupload.isEmpty()) {
+            errorBanner = "Please select a valid file!";
+            model.addAttribute("ErrorBanner", errorBanner);
+            return "result";
+        }
+
+        if (fileupload.getSize() > 10485760) {
+            errorBanner = "Maximum file size is 10M.";
             model.addAttribute("ErrorBanner", errorBanner);
             return "result";
         }

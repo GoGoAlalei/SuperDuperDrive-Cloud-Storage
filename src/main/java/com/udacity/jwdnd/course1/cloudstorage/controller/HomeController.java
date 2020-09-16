@@ -31,6 +31,8 @@ public class HomeController {
     private NoteService noteService;
     @Autowired
     private CredentialService credentialService;
+    //@Autowired
+    //private EncryptionService encryptionService;
 
     @PostMapping("/logout")
     public String logout(){
@@ -50,34 +52,26 @@ public class HomeController {
         model.addAttribute("files",files);
         model.addAttribute("notes",notes);
         model.addAttribute("credentials",credentials);
+        //model.addAttribute("encryptionService", encryptionService);
         return "home";
     }
+
+    /*
+      home.html:
+        <td>
+            <button type="button" id="editcredential-button" class="btn btn-success"
+                    th:onclick="javascript:showCredentialModal([[${credential.credentialid}]],[[${credential.url}]],[[${credential.username}]],[[${encryptionService.decryptValue(credential.password, credential.key)}]])">Edit</button>
+            <a class="btn btn-danger" id="deletecredential-button" th:href="@{/credential/delete/{credentialId}(credentialId=${credential.credentialid})}">Delete</a>
+        </td>
+     */
 
     @PostMapping("/file/upload")
     public String handleFileUpload(@RequestParam("fileUpload") MultipartFile fileupload, Authentication auth, Model model) throws IOException {
 
         String errorBanner = null;
 
-        InputStream fis = fileupload.getInputStream();
-        //byte[] buffer = new byte[fis.available()];
-        //fis.read(buffer);
-        FastByteArrayOutputStream output = new FastByteArrayOutputStream();
-        fis.transferTo(output);
-
-        //if(fileupload.isEmpty()) {
-        //    errorBanner = "Please select a file!";
-        //    model.addAttribute("ErrorBanner", errorBanner);
-        //   return "result";
-        //}
-
-        if (fileupload.getSize() > 5242880) {
-            errorBanner = "Maximum file size is 5M.";
-            model.addAttribute("ErrorBanner", errorBanner);
-            return "result";
-        }
-
         if(fileupload.isEmpty()) {
-            errorBanner = "Please select a valid file!";
+            errorBanner = "Please select a valid file to upload!";
             model.addAttribute("ErrorBanner", errorBanner);
             return "result";
         }
@@ -95,11 +89,17 @@ public class HomeController {
             return "result";
         }
 
+        InputStream fis = fileupload.getInputStream();
+        //byte[] buffer = new byte[fis.available()];
+        //fis.read(buffer);
+        FastByteArrayOutputStream output = new FastByteArrayOutputStream();
+        fis.transferTo(output);
+
         String upsize = String.valueOf(output.size());
         File upfile = new File(null, fileupload.getOriginalFilename(), fileupload.getContentType(), upsize, uid, output.toByteArray());
         int addrow = fileService.addFile(upfile);
 
-        if(addrow != 1) {
+        if (addrow != 1) {
             model.addAttribute("ChangeError", true);
             return "result";
         }
